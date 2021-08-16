@@ -1,0 +1,12 @@
+{
+  "name": "app-gamer",
+  "displayName": "app-gamer",
+  "expo": {
+    "name": "app-gamer",
+    "slug": "app-gamer",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
