@@ -1,49 +1,65 @@
-import React from 'react';
-import { SafeAreaView, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
+import { FlatList} from 'react-native-gesture-handler';
+import Toast from 'react-native-root-toast';
 import { useTheme } from 'styled-components';
 
-import Cart from '../../assets/icons/cart.svg';
+import CartClick from '../../assets/icons/cart-click.svg';
 import Logo from '../../assets/logo.svg';
+
 import { GameCard } from '../../components/GameCard';
+
+import {games} from '../../utils/data';
 
 import {
     Container,
     Header,
     Title,
-    TitleBold
-} from './styles'
+    TitleBold,
+    CartButton
+} from './styles';
+
+enum AppRoute {
+    HOME = 'Home',
+    CART = 'Cart'
+}
+
 
 export function Home() {
+    const navigation = useNavigation();
+    //const theme = useTheme();
     return(
         <Container>
             <Header>
-                <Logo height="50" width="143" />
-                <Cart height="25" width="25" />
+                <Logo height="50" width="143"/>
+                <CartButton onPress={() => navigation.navigate(AppRoute.CART)}>
+                    <CartClick />
+                </CartButton>
             </Header>
 
             <Title>Games {'\n'}
                 <TitleBold>Populares</TitleBold>
             </Title>
 
-            <SafeAreaView style={{flex: 1}}>
-                <ScrollView contentContainerStyle={{ 
-                    flexDirection: 'row', 
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-around',
-                    alignItems: 'center',
-                    marginTop: 38
-                }}
+            {/* <ActivityIndicator 
+                size="large"
+                color={theme.colors.primary}
+                style={{flex: 1}}
+            /> */}
+
+            <FlatList 
                 showsVerticalScrollIndicator={false}
-                >
-                    <GameCard />
-                    <GameCard />
-                    <GameCard />
-                    <GameCard />
-                    <GameCard />
-                    <GameCard />
-                </ScrollView>
-            </SafeAreaView>
+                numColumns={2}
+                contentContainerStyle={{
+                    flexDirection: 'column', 
+                }}
+                data={games}
+                keyExtractor={item => String(item.id)}
+                renderItem={({ item }) => 
+                    <GameCard data={item} />
+                }
+            />
         </Container>
     )
 }

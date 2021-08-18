@@ -1,12 +1,15 @@
+import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
     flex: 1;
-    align-items: flex-start;
-    justify-content: center;
+    padding: 0 16px;
+    background-color: ${({ theme }) => theme.colors.background};
+`;
 
-    margin: 0 16px;
+export const HomeButton = styled(TouchableOpacity)`
+    margin-top: 50px;
 `;
 
 export const Title = styled.Text`
@@ -21,6 +24,7 @@ export const TitleBold = styled.Text`
 `;
 
 export const Content = styled.View`
+    margin-top: 25px;
     height: 110px;
     width: 100%;
 

@@ -2,6 +2,7 @@ export default {
     colors: {
         primary: '#623FD9',
         secondary: '#F524B6',
+        background: '#FFFFFF',
 
         card_background: '#F6F6F6',
 

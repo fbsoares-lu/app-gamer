@@ -1,12 +1,13 @@
+import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
-    width: 166px;
+export const Container = styled(TouchableOpacity)`
     height: 257px;
     background-color: ${({ theme }) => theme.colors.card_background};
     border-radius: 6px;
-    margin-top: 10px;
+    flex: 1;
+    margin: 5px;
 `;
 
 export const ContentCard = styled.View`
@@ -15,7 +16,7 @@ export const ContentCard = styled.View`
 `;
 
 export const ImageCard = styled.Image`
-    width: 166px;
+    width: auto;
     height: 78px;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
@@ -66,6 +67,7 @@ export const Price = styled.Text`
 
 export const CategoryCard = styled.View`
     flex-direction: row;
+    flex-wrap: wrap;
 `;
 
 export const CardContent = styled.View`

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image, View } from 'react-native';
+import { View } from 'react-native';
+import Toast from 'react-native-root-toast';
 
-import ImageBackground from '../../assets/image-01.png';
 import CartAdd from '../../assets/icons/cart-add.svg';
 
 import {
@@ -18,32 +18,60 @@ import {
     CardContentText,
 } from './styles';
 
-export function GameCard() {
+interface IGameCard {
+    id: number;
+    image: Object;
+    name: string;
+    plataform: [
+        {
+            id: number,
+            name: string;
+        }
+    ],
+    category: [
+        {
+            id: number,
+            name: string;
+        }
+    ],
+    price: number
+}
+interface Props {
+    data: IGameCard;
+}
+
+export function GameCard({ data }: Props) {
     return (
-        <Container>
-            <View style={{ padding: 0}}>
-                <ImageCard source={ImageBackground} resizeMode="cover" />
+        // <View style={{flex: 1, justifyContent: 'space-between', marginBottom: 11}}>
+        <Container onPress={() => {
+            Toast.show('Item adicionado ao carrinho', {
+                duration: Toast.durations.SHORT,
+            })
+        }}>
+            <Toast 
+                style={{backgroundColor: '#ff3000'}}
+            />
+            <View>
+                <ImageCard source={data.image} resizeMode="cover" />
             </View>
             <ContentCard>
-                <Title>The Legend of Zelda: {'\n'}Link's Awaking</Title>
-                <Plataform>Plataforma: Nintendo Switch</Plataform>
+                <Title>{data.name}</Title>
+                <Plataform>Plataforma: {data.plataform.map(item => item.name.concat('/ '))}</Plataform>
                 <Category>Categoria/Gênero</Category>
                 <CategoryCard>
-                    <CardContent>
-                        <CardContentText>Ação</CardContentText>
+                {data.category.map(item => (
+                    <CardContent key={item.id}>
+                        <CardContentText>{item.name}</CardContentText>
                     </CardContent>
-                    <CardContent>
-                        <CardContentText>Aventura</CardContentText>
-                    </CardContent>
-                    <CardContent>
-                        <CardContentText>Aventura</CardContentText>
-                    </CardContent>
+                ))}
                 </CategoryCard>
+                
             </ContentCard>
             <ButtonCard>
                 <CartAdd />
-                <Price>R$ 299,00</Price>
+                <Price>R$ {data.price}</Price>
             </ButtonCard>
         </Container>
+        // </View>
     )
 }

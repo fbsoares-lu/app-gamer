@@ -1,3 +1,4 @@
+import { RootSiblingParent } from 'react-native-root-siblings';
 import React from 'react';
 import { 
   useFonts, 
@@ -6,9 +7,13 @@ import {
 } from '@expo-google-fonts/open-sans';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
+import { StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 
 import Theme from './src/styles/theme';
-import {Home} from './src/screen/Home';
+import { Navigation } from './src/routes/navigation';
+
+
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -21,8 +26,13 @@ export default function App() {
   }
   
   return (
-    <ThemeProvider theme={Theme}>
-      <Home />
-    </ThemeProvider>
+      <ThemeProvider theme={Theme}>
+        <RootSiblingParent>
+          <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+          <NavigationContainer>
+            <Navigation/>
+          </NavigationContainer>
+        </RootSiblingParent>
+      </ThemeProvider>
   );
 }
