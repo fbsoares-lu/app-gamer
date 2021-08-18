@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import Toast from 'react-native-root-toast';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartAdd from '../../assets/icons/cart-add.svg';
 
 import {
@@ -17,8 +16,9 @@ import {
     CardContent,
     CardContentText,
 } from './styles';
+import { useEffect } from 'react';
 
-interface IGameCard {
+export interface IGameCard {
     id: number;
     image: Object;
     name: string;
@@ -41,16 +41,37 @@ interface Props {
 }
 
 export function GameCard({ data }: Props) {
+    const dataKey = '@appgamer:games';
+    
+    async function handleAddGames(data: Omit<IGameCard, "plataform"|"category">) {
+        try {
+            const oldData = await AsyncStorage.getItem(dataKey);
+            const currentData = oldData ? JSON.parse(oldData) : [];
+
+            const dataFormatted = [
+                ...currentData,
+                data
+            ];
+
+            await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        async function remove() {
+            await AsyncStorage.removeItem(dataKey);
+        }
+        remove();
+    }, []);
+
     return (
-        // <View style={{flex: 1, justifyContent: 'space-between', marginBottom: 11}}>
-        <Container onPress={() => {
-            Toast.show('Item adicionado ao carrinho', {
-                duration: Toast.durations.SHORT,
-            })
-        }}>
-            <Toast 
-                style={{backgroundColor: '#ff3000'}}
-            />
+        <Container
+            onPress={() => {
+                handleAddGames(data)
+            }}
+        >
             <View>
                 <ImageCard source={data.image} resizeMode="cover" />
             </View>
@@ -72,6 +93,5 @@ export function GameCard({ data }: Props) {
                 <Price>R$ {data.price}</Price>
             </ButtonCard>
         </Container>
-        // </View>
     )
 }

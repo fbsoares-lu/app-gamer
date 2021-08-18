@@ -1,31 +1,8 @@
-import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-    flex: 1;
-    padding: 0 16px;
-    background-color: ${({ theme }) => theme.colors.background};
-`;
-
-export const HomeButton = styled(TouchableOpacity)`
-    margin-top: 50px;
-`;
-
-export const Title = styled.Text`
-    margin-top: 35px;
-    font-family: ${({ theme }) => theme.fonts.openSans_400};
-    font-size: ${RFValue(32)}px;
-    margin-bottom: 25px;
-`;
-
-export const TitleBold = styled.Text`
-    font-family: ${({ theme }) => theme.fonts.openSans_700};
-    font-size: ${RFValue(32)}px;
-`;
-
-export const Content = styled.View`
-    margin-top: 25px;
+    margin-bottom: 11px;
     height: 110px;
     width: 100%;
 
@@ -34,13 +11,22 @@ export const Content = styled.View`
     justify-content: space-between;
 `;
 
-export const ImageCard = styled.Image`
+export const Content = styled.View`
+    flex-direction: row;
+    align-items: center;
+`;
+
+export const ImageContainer = styled.View`
+    padding: 0;
+`;
+
+export const ImageContainerCard = styled.Image`
     width: 110px;
     height: 110px;
     border-radius: 6px;
 `;
 
-export const ContainerText = styled.View`
+export const ContentText = styled.View`
     margin-left: 10px;
     width: 50%;
 `;
@@ -68,11 +54,8 @@ export const ButtonCounter = styled.View`
     justify-content: space-between;
 `;
 
-export const Number = styled.Text`
+export const Counter = styled.Text`
     font-family: ${({ theme }) => theme.fonts.openSans_700};
     font-size: ${RFValue(14)}px;
     color: ${({ theme }) => theme.colors.title};
 `;
-
-
-

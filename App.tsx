@@ -1,4 +1,4 @@
-import { RootSiblingParent } from 'react-native-root-siblings';
+
 import React from 'react';
 import { 
   useFonts, 
@@ -27,12 +27,10 @@ export default function App() {
   
   return (
       <ThemeProvider theme={Theme}>
-        <RootSiblingParent>
           <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
           <NavigationContainer>
             <Navigation/>
           </NavigationContainer>
-        </RootSiblingParent>
       </ThemeProvider>
   );
 }

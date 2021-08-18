@@ -1,8 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { FlatList} from 'react-native-gesture-handler';
-import Toast from 'react-native-root-toast';
 import { useTheme } from 'styled-components';
 
 import CartClick from '../../assets/icons/cart-click.svg';
@@ -20,11 +19,6 @@ import {
     CartButton
 } from './styles';
 
-enum AppRoute {
-    HOME = 'Home',
-    CART = 'Cart'
-}
-
 
 export function Home() {
     const navigation = useNavigation();
@@ -33,7 +27,7 @@ export function Home() {
         <Container>
             <Header>
                 <Logo height="50" width="143"/>
-                <CartButton onPress={() => navigation.navigate(AppRoute.CART)}>
+                <CartButton onPress={() => navigation.navigate("Cart")}>
                     <CartClick />
                 </CartButton>
             </Header>
