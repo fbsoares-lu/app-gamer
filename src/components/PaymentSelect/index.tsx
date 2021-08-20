@@ -23,6 +23,11 @@ interface Props {
 
 export function PaymentSelect({ isVisible, total }: Props) {
     const navigation = useNavigation();
+
+    function handlePress() {
+        isVisible
+       // navigation.navigate('Home');
+    }
     return (
         <Container>
             <Modal

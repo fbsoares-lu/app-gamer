@@ -1,6 +1,7 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { FlatList, TouchableOpacity } from 'react-native';
+import { getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
 
 export const Container = styled.View`
     flex: 1;
@@ -13,13 +14,14 @@ export const Header = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 35px 0;
+    margin-top: ${getStatusBarHeight()+20}px;
+    padding-bottom: 30px;
 `;
 
 export const Title = styled.Text`
     font-family: ${({ theme }) => theme.fonts.openSans_400};
     font-size: ${RFValue(32)}px;
-    margin-bottom: 38px;
+    margin-bottom: 40px;
 `;
 
 export const TitleBold = styled.Text`
@@ -36,3 +38,9 @@ export const CardList = styled(FlatList).attrs({
 `;
 
 export const CartButton = styled(TouchableOpacity)``;
+
+export const Footer = styled.View`
+    width: 100%;
+    background-color: transparent;
+    margin-bottom: ${getBottomSpace()+ 44}px;
+`;

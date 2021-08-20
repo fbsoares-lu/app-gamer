@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { FlatList, Modal, Text } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, Modal, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import { CartList } from '../../components/CartList';
-import cep from '../../services/cep';
+import cepApi from '../../services/cep';
 import { useCart } from '../../hooks/cart';
 
 import Arrow from '../../assets/icons/arrow.svg';
@@ -24,6 +27,7 @@ import {
     ShippingContainer,
     ShippingInput,
     ShippingButton,
+    TotalContainer,
     Total,
     TotalItensText,
     TotalValueText,
@@ -32,19 +36,67 @@ import {
     PaymentText,
     PaymentTextBold,
     BackgroundPayment,
-    PaymentButton
+    PaymentButton,
+    ShippingContent,
+    ShippingContentStreet,
+    ShippingPrice,
+    ShippingPriceValue,
+    TotalShipping,
+    TotalShippingText
 } from './styles';
 import { PaymentSelect } from '../../components/PaymentSelect';
 interface ICepProps {
     uf: string;
+    logradouro: string;
+    bairro: string;
 }
+
+const schema = yup.object().shape({
+    cep: yup.number().integer().positive().required()
+});
 
 export function Cart() {
     const navigate = useNavigation();
     const { products } = useCart();
 
-    const [userCep, setUserCep] = useState('');
+    const [cep, setCep] = useState('');
+    const [cepValue, setCepValue] = useState<ICepProps>({} as ICepProps);
+    const [isCep, setIsCep] = useState(false);
+
     const [isVisible, setIsVisible] = useState(false);
+
+    // const { control, handleSubmit, formState: { errors } } = useForm({
+    //     resolver: yupResolver(schema)
+    // });
+
+    // function onSubmit(data: ICepProps) {
+    //     setCep(data);
+    // }
+
+    const cepContent = useCallback(async() => {
+        try{
+            const response = await cepApi.get(`/${cep}/json`);
+            console.log(response.data);
+            setCepValue(response.data);
+            setIsCep(true);
+            return;
+        } catch(err) {
+            console.log(err);
+            setCep('');
+            return;
+        }
+    }, []);
+
+    // const onSubmit = useCallback(async data => {
+    //     try {
+    //         const response = await cep.get(`/${data}/json`);
+    //         console.log(response);
+    //         return;
+    //     } catch(error) {
+    //         Alert.alert("Informe um CEP válido")
+    //         return;
+    //     }
+    // }, []);
 
     const totalItens = products.reduce((accumulator, current) => {
         return accumulator += current.quantity;
@@ -58,72 +110,106 @@ export function Cart() {
         setIsVisible(true);
     }
 
-    async function handleCep() {
-        const response = await cep.get(`/${userCep}/json`);
-
-        const success: ICepProps = response.data;
-
-        if (success.uf === 'PE') {
-            console.log('PE');
-            return;
-        } else {
-            console.log('Outros')
-            return;
-        }
-    }
-
     return (
-        <Container>
-            <HomeButton onPress={() => navigate.goBack()}>
-                <Arrow />
-            </HomeButton>
-            <Title>Seu {'\n'}
-                <TitleBold>Carrinho</TitleBold>
-            </Title>
-            <FlatList 
-                showsVerticalScrollIndicator={false}
-                data={products}
-                keyExtractor={item => String(item.id)}
-                renderItem={({ item }) => 
-                    <CartList data={item} />
-                }
-            />
-            <Footer>
-                <BackgroundPayment>
-                    <Preview>
-                        <LineContainer>
-                            <Line />
-                        </LineContainer>
-                        <Shipping>
-                            <ShippingText>Calcule o frete</ShippingText>
-                            <ShippingContainer>
-                                <ShippingInput 
-                                    value={userCep}
-                                    onChangeText={setUserCep}
-                                    placeholder="Seu CEP"
-                                />
-                                <ShippingButton onPress={handleCep}>
-                                    <FindIcon height="20"/>
-                                </ShippingButton>
-                            </ShippingContainer>
-                            <Total>
-                                <TotalItensText>{`${totalItens} itens`}</TotalItensText>
-                                <TotalValueText>{`R$ ${totalProducts}`}</TotalValueText>
-                            </Total>
-                        </Shipping>
-                    </Preview>
-                    <Payment>
-                        <PaymentContainer>
-                            <PaymentText>Finalizar <PaymentTextBold>Compra</PaymentTextBold></PaymentText>
-                            <PaymentButton onPress={handlePayment}>
-                                <CartCheckIcon height="24" width="24"/>
-                            </PaymentButton>
-                        </PaymentContainer>
-                    </Payment>
-                </BackgroundPayment>
-            </Footer>
+        <KeyboardAvoidingView
+            style={{flex: 1}}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            enabled
+        >
+            <Container>
+                <HomeButton onPress={() => navigate.goBack()}>
+                    <Arrow />
+                </HomeButton>
+                <Title>Seu {'\n'}
+                    <TitleBold>Carrinho</TitleBold>
+                </Title>
+                <FlatList 
+                    showsVerticalScrollIndicator={false}
+                    data={products}
+                    keyExtractor={item => String(item.id)}
+                    renderItem={({ item }) => 
+                        <CartList data={item} />
+                    }
+                />
+                <Footer>
+                    <BackgroundPayment>
+                        <Preview>
+                            <LineContainer>
+                                <Line />
+                            </LineContainer>
+                            <Shipping>
+                                <ShippingText>Calcule o frete</ShippingText>
+                                <ShippingContainer>
+                                    {/* <Controller
+                                        control={control}
+                                        rules={{
+                                            required: true,
+                                        }}
+                                        render={({ field: { onChange, value } }) => (
+                                            <ShippingInput 
+                                                isErrored={!!errors.cep}
+                                                value={value}
+                                                onChangeText={onChange}
+                                                placeholder="Seu CEP"
+                                                keyboardType="numeric"
+                                            />
+                                        )}
+                                        name="cep"
+                                        defaultValue=""
+                                    /> */}
 
-            <PaymentSelect isVisible={isVisible} total={totalProducts} />
-        </Container>
+                                        <ShippingInput 
+                                            value={cep}
+                                            onChangeText={setCep}
+                                            placeholder="Seu CEP"
+                                            keyboardType="numeric"
+                                        />
+                                    
+                                    <ShippingButton 
+                                        onPress={cepContent}
+                                    >
+                                        <FindIcon height="20"/>
+                                    </ShippingButton>
+                                </ShippingContainer>
+                                {/* {   isCep 
+                                    &&
+                                    <ShippingContent>
+                                        <ShippingContentStreet>
+                                            Rua Comendador Sá Barreto, Piedade - Jab
+                                        </ShippingContentStreet>
+                                        <ShippingPrice>
+                                            valor do frete:
+                                            <ShippingPriceValue>
+                                                RS 100,00
+                                            </ShippingPriceValue>
+                                        </ShippingPrice>
+                                    </ShippingContent>
+                                } */}
+                                <TotalContainer>
+                                    {/* <Total>
+                                        <TotalShipping>frete</TotalShipping>
+                                        <TotalShippingText>{`R$ 100`}</TotalShippingText>
+                                    </Total> */}
+
+                                    <Total>
+                                        <TotalItensText>{`${totalItens} itens`}</TotalItensText>
+                                        <TotalValueText>{`R$ ${totalProducts}`}</TotalValueText>
+                                    </Total>
+                                </TotalContainer>
+                            </Shipping>
+                        </Preview>
+                        <Payment>
+                            <PaymentContainer>
+                                <PaymentText>Finalizar <PaymentTextBold>Compra</PaymentTextBold></PaymentText>
+                                <PaymentButton onPress={handlePayment}>
+                                    <CartCheckIcon height="24" width="24"/>
+                                </PaymentButton>
+                            </PaymentContainer>
+                        </Payment>
+                    </BackgroundPayment>
+                </Footer>
+                {/* <PaymentSelect isVisible={isVisible} total={totalProducts} />  */}
+            </Container>
+        </KeyboardAvoidingView>
     )
 }

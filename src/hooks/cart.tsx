@@ -35,6 +35,7 @@ interface ICartContext {
     addCart(item: Omit<Product, 'quantity'>): void;
     increment(id: number): void;
     decrement(id: number): void;
+    removeCart(id: number): void;
 }
 
 interface ICartContextProps {
@@ -52,7 +53,6 @@ function CartProvider( { children } : ICartContextProps) {
             const products = await AsyncStorage.getItem(dataKey);
 
             const currentProducts = products ? JSON.parse(products) : [];
-            console.log(currentProducts);
             setProducts(currentProducts);
         }
         loadProducts();
@@ -74,17 +74,18 @@ function CartProvider( { children } : ICartContextProps) {
         await AsyncStorage.setItem(dataKey, JSON.stringify(products));
     }, [products]);
 
-    const removeCart = useCallback(async product => {
-        const productExists = products.find(item => item.id === product.id);
+    const removeCart = useCallback(async id => {
+        const productExists = products.findIndex(item => item.id === id);
 
-        if (productExists) {
-            
+        if (productExists != -1) {
+            products.splice(productExists, 1);
+            await AsyncStorage.removeItem(dataKey)
         }
     }, [products]);
 
-    const increment = useCallback(async product_id => {
+    const increment = useCallback(async id => {
         const productIncrement = products.map(product => 
-            product.id === product_id && product.price > 0 
+            product.id === id && product.price > 0 
             ? {...product, quantity: product.quantity + 1}
             : product,
         );
@@ -94,9 +95,9 @@ function CartProvider( { children } : ICartContextProps) {
         await AsyncStorage.setItem(dataKey, JSON.stringify(productIncrement));
     }, [products]);
 
-    const decrement = useCallback(async product_id => {
+    const decrement = useCallback(async id => {
         const productIncrement = products.map(product => 
-            product.id === product_id && product.quantity > 1 
+            product.id === id && product.quantity > 1 
             ? {...product, quantity: product.quantity - 1}
             : product,
         );
@@ -106,7 +107,7 @@ function CartProvider( { children } : ICartContextProps) {
         await AsyncStorage.setItem(dataKey, JSON.stringify(productIncrement));
     }, [products]);
 
-    const value = useMemo(() => ({ addCart, products, increment, decrement}), [products, addCart, increment, decrement]);
+    const value = useMemo(() => ({ addCart, products, increment, decrement, removeCart}), [products, addCart, increment, decrement, removeCart]);
 
     return(
         <CartContext.Provider value={value}>
