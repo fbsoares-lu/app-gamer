@@ -12,8 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import Theme from './src/styles/theme';
 import { Navigation } from './src/routes/navigation';
-
-
+import { CartProvider } from './src/hooks/cart';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -27,10 +26,12 @@ export default function App() {
   
   return (
       <ThemeProvider theme={Theme}>
-          <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
-          <NavigationContainer>
-            <Navigation/>
-          </NavigationContainer>
+          <CartProvider>
+            <StatusBar barStyle="dark-content" translucent backgroundColor="transparent" />
+            <NavigationContainer>
+              <Navigation/>
+            </NavigationContainer>
+          </CartProvider>
       </ThemeProvider>
   );
 }

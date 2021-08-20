@@ -1,14 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { useEffect } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import React from 'react';
 import { FlatList} from 'react-native-gesture-handler';
-import { useTheme } from 'styled-components';
 
 import CartClick from '../../assets/icons/cart-click.svg';
 import Logo from '../../assets/logo.svg';
-
 import { GameCard } from '../../components/GameCard';
-
 import {games} from '../../utils/data';
 
 import {
@@ -22,7 +18,6 @@ import {
 
 export function Home() {
     const navigation = useNavigation();
-    //const theme = useTheme();
     return(
         <Container>
             <Header>
@@ -35,12 +30,6 @@ export function Home() {
             <Title>Games {'\n'}
                 <TitleBold>Populares</TitleBold>
             </Title>
-
-            {/* <ActivityIndicator 
-                size="large"
-                color={theme.colors.primary}
-                style={{flex: 1}}
-            /> */}
 
             <FlatList 
                 showsVerticalScrollIndicator={false}

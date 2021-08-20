@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartAdd from '../../assets/icons/cart-add.svg';
+import { useCart } from '../../hooks/cart';
 
 import {
     Container,
@@ -16,9 +16,8 @@ import {
     CardContent,
     CardContentText,
 } from './styles';
-import { useEffect } from 'react';
 
-export interface IGameCard {
+export interface Products {
     id: number;
     image: Object;
     name: string;
@@ -37,41 +36,18 @@ export interface IGameCard {
     price: number
 }
 interface Props {
-    data: IGameCard;
+    data: Products;
 }
 
 export function GameCard({ data }: Props) {
-    const dataKey = '@appgamer:games';
-    
-    async function handleAddGames(data: Omit<IGameCard, "plataform"|"category">) {
-        try {
-            const oldData = await AsyncStorage.getItem(dataKey);
-            const currentData = oldData ? JSON.parse(oldData) : [];
+    const { addCart } = useCart();
 
-            const dataFormatted = [
-                ...currentData,
-                data
-            ];
-
-            await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
-        } catch(err) {
-            console.log(err);
-        }
+    function handleAddCart(item: Products) {
+        addCart(item);
     }
 
-    useEffect(() => {
-        async function remove() {
-            await AsyncStorage.removeItem(dataKey);
-        }
-        remove();
-    }, []);
-
     return (
-        <Container
-            onPress={() => {
-                handleAddGames(data)
-            }}
-        >
+        <Container>
             <View>
                 <ImageCard source={data.image} resizeMode="cover" />
             </View>
@@ -88,7 +64,7 @@ export function GameCard({ data }: Props) {
                 </CategoryCard>
                 
             </ContentCard>
-            <ButtonCard>
+            <ButtonCard onPress={() => handleAddCart(data)}>
                 <CartAdd />
                 <Price>R$ {data.price}</Price>
             </ButtonCard>

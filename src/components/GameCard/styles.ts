@@ -2,7 +2,7 @@ import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
-export const Container = styled(TouchableOpacity)`
+export const Container = styled.View`
     height: 257px;
     background-color: ${({ theme }) => theme.colors.card_background};
     border-radius: 6px;
@@ -40,7 +40,7 @@ export const Category = styled.Text`
     font-family: ${({ theme }) => theme.fonts.openSans_400};
 `;
 
-export const ButtonCard = styled.View`
+export const ButtonCard = styled(TouchableOpacity)`
     position: absolute;
 
     background-color: ${({ theme }) => theme.colors.primary};
