@@ -29,8 +29,14 @@ export const ImageContainerCard = styled.Image`
 `;
 
 export const BorderIconTrash = styled(TouchableOpacity)`
-    background-color: red;
-    padding: 10px;
+    background-color: ${({ theme }) => theme.colors.trash};
+    position: absolute;
+    bottom: 5px; 
+    left: 5px;
+
+    border-radius: 5px;
+
+    padding: 5px;
 `;
 
 export const ContentText = styled.View`

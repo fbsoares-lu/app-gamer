@@ -18,7 +18,7 @@ export default {
         text_item: '#878787',
 
         toast: '#47CC92',
-        error: '#CC4747'
+        trash: '#FF607B'
     },
 
     fonts: {

@@ -63,7 +63,7 @@ export function Home() {
         <Container>
             <Header>
                 <Logo height="50" width="143"/>
-                <CartButton onPress={() => navigation.navigate('Cart')}>
+                <CartButton onPress={() => navigation.navigate("Cart")}>
                     <CartClick />
                 </CartButton>
             </Header>

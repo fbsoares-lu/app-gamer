@@ -19,6 +19,7 @@ import {
     Counter,
     Button
 } from './styles';
+import { View } from 'react-native';
 
 
 export interface Products {
@@ -64,9 +65,11 @@ export function CartProducts({ data }: Props) {
             <Content style={{flexDirection: 'row', alignItems: 'center'}}>
                 <ImageContainer>
                     <ImageContainerCard source={{ uri: `${data.image}`}} resizeMode="cover" />
-                    <BorderIconTrash onPress={() => {handleRemoveItem(data)}}>
-                        <TrashIcon style={{position: 'absolute', bottom: 10, left: 10}} height='20' />
-                    </BorderIconTrash>
+                    <View>
+                        <BorderIconTrash onPress={() => {handleRemoveItem(data)}}>
+                            <TrashIcon height='16' />
+                        </BorderIconTrash>
+                    </View>
                 </ImageContainer>
 
                 <ContentText>
@@ -83,6 +86,7 @@ export function CartProducts({ data }: Props) {
                 <Button onPress={() => handleDecrement(data.id)} >
                     <MinusIcon height={8} width={8} />
                 </Button>
+                
             </ButtonCounter>
         </Container>
     )

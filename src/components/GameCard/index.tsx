@@ -51,7 +51,7 @@ export function GameCard({ data }: Props) {
         setTimeout(function hideToast() {
         Toast.hide(toast);
         }, 1500);
-
+        console.log("antes de entrar no cart: "+item);
         addCart(item);
     }
 

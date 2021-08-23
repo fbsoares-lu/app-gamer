@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { Alert, FlatList, KeyboardAvoidingView, ScrollView, Platform, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import { CartProducts } from '../../components/CartProducts';
@@ -151,34 +151,13 @@ export function Cart() {
                             <Shipping>
                                 <ShippingText>Calcule o frete</ShippingText>
                                 <ShippingContainer>
-                                    {/* <Controller
-                                        control={control}
-                                        rules={{
-                                            required: true,
-                                        }}
-                                        render={({ field: { onChange, value } }) => (
-                                            <ShippingInput 
-                                                isErrored={!!errors.cep}
-                                                value={value}
-                                                onChangeText={onChange}
-                                                placeholder="Seu CEP"
-                                                keyboardType="numeric"
-                                            />
-                                        )}
-                                        name="cep"
-                                        defaultValue=""
-                                    /> */}
-
-                                        <ShippingInput 
-                                            value={cep}
-                                            onChangeText={setCep}
-                                            placeholder="Seu CEP"
-                                            keyboardType="numeric"
-                                        />
-                                    
-                                    <ShippingButton 
-                                        onPress={() => {onSubmit()}}
-                                    >
+                                    <ShippingInput 
+                                        value={cep}
+                                        onChangeText={setCep}
+                                        placeholder="Seu CEP"
+                                        keyboardType="numeric"
+                                    />
+                                    <ShippingButton onPress={() => {onSubmit()}}>
                                         <FindIcon height="20"/>
                                     </ShippingButton>
                                 </ShippingContainer>
