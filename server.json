@@ -1,0 +1,166 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "image": "https://i.imgur.com/Vtp8LO6.png",
+            "name": "The Legend of Zelda: Link’s Awakening",
+            "plataform": [
+                {
+                    "id": 1,
+                    "name": "Nintendo Switch"
+                },
+                {
+                    "id": 2,
+                    "name": "PC"
+                }
+            ],
+            "category": [
+                {
+                    "id": 1,
+                    "name": "Ação"
+                },
+                {
+                    "id": 2,
+                    "name": "Aventura"
+                }
+            ],
+            "price": 299,
+            "quantity": 0
+        },
+        {
+            "id": 2,
+            "image": "https://i.imgur.com/eodNcjv.png",
+            "name": "Animal Crossing: New Horizons",
+            "plataform": [
+                {
+                    "id": 1,
+                    "name": "Nintendo Switch"
+                },
+                {
+                    "id": 2,
+                    "name": "PC"
+                }
+            ],
+            "category": [
+                {
+                    "id": 3,
+                    "name": "Simulação"
+                }
+            ],
+            "price": 350,
+            "quantity": 0
+        },
+        {
+            "id": 3,
+            "image": "https://i.imgur.com/7U1eSY1.png",
+            "name": "Celeste",
+            "plataform": [
+                {
+                    "id": 2,
+                    "name": "PC"
+                }
+            ],
+            "category": [
+                {
+                    "id": 1,
+                    "name": "Ação"
+                },
+                {
+                    "id": 2,
+                    "name": "Aventura"
+                },
+                {
+                    "id": 4,
+                    "name": "Indie"
+                }
+            ],
+            "price": 36.99,
+            "quantity": 0
+        },
+        {
+            "id": 4,
+            "image": "https://i.imgur.com/XbenDwv.png",
+            "name": "Hades",
+            "plataform": [
+                {
+                    "id": 1,
+                    "name": "Nintendo Switch"
+                },
+                {
+                    "id": 2,
+                    "name": "PC"
+                }
+            ],
+            "category": [
+                {
+                    "id": 1,
+                    "name": "Ação"
+                },
+                {
+                    "id": 2,
+                    "name": "Aventura"
+                },
+                {
+                    "id": 4,
+                    "name": "Indie"
+                }
+            ],
+            "price": 47.49,
+            "quantity": 0
+        },
+        {
+            "id": 5,
+            "image": "https://i.imgur.com/1cnvUwh.png",
+            "name": "Knockout City™",
+            "plataform": [
+                {
+                    "id": 1,
+                    "name": "Nintendo Switch"
+                },
+                {
+                    "id": 2,
+                    "name": "PC"
+                }
+            ],
+            "category": [
+                {
+                    "id": 1,
+                    "name": "Ação"
+                },
+                {
+                    "id": 4,
+                    "name": "Indie"
+                },
+                {
+                    "id": 5,
+                    "name": "RPG"
+                }
+            ],
+            "price": 99,
+            "quantity": 0
+        },
+        {
+            "id": 6,
+            "image": "https://i.imgur.com/VclPuMj.png",
+            "name": "Dota 2",
+            "plataform": [
+                {
+                    "id": 2,
+                    "name": "PC"
+                }
+            ],
+            "category": [
+                {
+                    "id": 1,
+                    "name": "Ação"
+                },
+                {
+                    "id": 2,
+                    "name": "Aventura"
+                }
+            ],
+            "price": 0,
+            "quantity": 0
+        }
+    ]
+}

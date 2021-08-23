@@ -12,7 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Product {
     id: number;
-    image: Object;
+    image: string;
     name: string;
     plataform: [
         {
@@ -35,7 +35,8 @@ interface ICartContext {
     addCart(item: Omit<Product, 'quantity'>): void;
     increment(id: number): void;
     decrement(id: number): void;
-    removeCart(id: number): void;
+    removeCart(): void;
+    removeEspecificItem(item: Omit<Product, 'quantity'>): void;
 }
 
 interface ICartContextProps {
@@ -52,8 +53,9 @@ function CartProvider( { children } : ICartContextProps) {
         async function loadProducts(): Promise<void> {
             const products = await AsyncStorage.getItem(dataKey);
 
-            const currentProducts = products ? JSON.parse(products) : [];
-            setProducts(currentProducts);
+            if (products) {
+                setProducts([... JSON.parse(products)]);
+            }
         }
         loadProducts();
     }, []);
@@ -70,22 +72,34 @@ function CartProvider( { children } : ICartContextProps) {
         } else {
             setProducts([...products, {...product, quantity: 1}]);
         }
-
         await AsyncStorage.setItem(dataKey, JSON.stringify(products));
     }, [products]);
 
-    const removeCart = useCallback(async id => {
-        const productExists = products.findIndex(item => item.id === id);
+    const removeEspecificItem = useCallback(async product => {
+        console.log("veio aqui")
+        const productExists = products.findIndex(item => item.id === product.id);
+        console.log("Qual veio: "+ productExists)
 
         if (productExists != -1) {
-            products.splice(productExists, 1);
-            await AsyncStorage.removeItem(dataKey)
+            //const productRemoved = products.splice(productExists, 1);
+            setProducts(
+                products.splice(productExists, 1)
+            );
+
+            await AsyncStorage.setItem(dataKey, JSON.stringify(products));
         }
+        
+    }, [products]);
+
+    const removeCart = useCallback(async () => {
+        setProducts([]);
+        await AsyncStorage.setItem(dataKey, JSON.stringify([]));
+        //await AsyncStorage.removeItem(dataKey);
     }, [products]);
 
     const increment = useCallback(async id => {
         const productIncrement = products.map(product => 
-            product.id === id && product.price > 0 
+            product.id === id && String(product.price) > 'R$0,00' 
             ? {...product, quantity: product.quantity + 1}
             : product,
         );
@@ -97,7 +111,7 @@ function CartProvider( { children } : ICartContextProps) {
 
     const decrement = useCallback(async id => {
         const productIncrement = products.map(product => 
-            product.id === id && product.quantity > 1 
+            product.id === id && product.quantity > 1
             ? {...product, quantity: product.quantity - 1}
             : product,
         );
@@ -107,7 +121,7 @@ function CartProvider( { children } : ICartContextProps) {
         await AsyncStorage.setItem(dataKey, JSON.stringify(productIncrement));
     }, [products]);
 
-    const value = useMemo(() => ({ addCart, products, increment, decrement, removeCart}), [products, addCart, increment, decrement, removeCart]);
+    const value = useMemo(() => ({ addCart, products, increment, decrement, removeCart, removeEspecificItem}), [products, addCart, increment, decrement, removeCart, removeEspecificItem]);
 
     return(
         <CartContext.Provider value={value}>

@@ -1,10 +1,13 @@
 import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { getStatusBarHeight} from 'react-native-iphone-x-helper';
-
+import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
+
 interface Props {
     isErrored?: boolean;
+    isDisabled?: boolean;
+    disabled?: boolean;
 }
 
 export const Container = styled.View`
@@ -37,7 +40,6 @@ export const Text = styled.Text`
 `;
 
 export const Footer = styled.View`
-    width: 100%;
 `;
 
 export const Preview = styled.View`
@@ -81,13 +83,15 @@ export const ShippingContainer = styled.View`
 export const ShippingInput = styled.TextInput<Props>`
     flex: 1;
     height: 52px;
+    padding: 0 16px;
+    margin-right: 10px;
+
     border-width: 1px;
     border-style: solid;
     border-color: ${({ theme, isErrored }) => isErrored ? theme.colors.error : theme.colors.primary};
     border-radius: 50px;
+
     background-color: ${({ theme }) => theme.colors.background};
-    padding: 0 16px;
-    margin-right: 10px;
 `;
 
 export const ShippingButton = styled(TouchableOpacity)<Props>`
@@ -148,22 +152,22 @@ export const PaymentContainer = styled.View`
     flex-direction: row;
 `;
 
-export const PaymentText = styled.Text`
+export const PaymentText = styled.Text<Props>`
     font-family: ${({ theme }) => theme.fonts.openSans_400};
     font-size: ${RFValue(20)}px;
-    color: ${({ theme }) => theme.colors.primary_light};
+    color: ${({ theme, isDisabled }) => !isDisabled ? theme.colors.text : theme.colors.primary_light};
 `;
 
-export const PaymentTextBold = styled.Text`
+export const PaymentTextBold = styled.Text<Props>`
     font-family: ${({ theme }) => theme.fonts.openSans_700};
     font-size: ${RFValue(20)}px;
-    color: ${({ theme }) => theme.colors.primary_light};
+    color: ${({ theme, isDisabled }) => !isDisabled ? theme.colors.text : theme.colors.primary_light};
 `;
 
-export const PaymentButton = styled(TouchableOpacity)`
+export const PaymentButton = styled(TouchableOpacity)<Props>`
     height: 38px;
     width: 38px;
-    background-color: ${({ theme }) => theme.colors.primary_light};
+    background-color: ${({ theme, disabled }) => !disabled ? theme.colors.text : theme.colors.primary_light};
     border-radius: 22px;
 
     align-items: center;

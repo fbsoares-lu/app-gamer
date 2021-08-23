@@ -1,13 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect, useState} from 'react';
 import { FlatList} from 'react-native-gesture-handler';
+import 'intl';
+import 'intl/locale-data/jsonp/pt-BR';
 
 import CartClick from '../../assets/icons/cart-click.svg';
 import Logo from '../../assets/logo.svg';
+
 import { GameCard } from '../../components/GameCard';
-import { useCart } from '../../hooks/cart';
-import {games} from '../../utils/data';
+//import { product } from '../../utils/data';
+import { server } from '../../services/cep';
+import { ProductDTO } from '../../dtos/ProductDTO';
 
 import {
     Container,
@@ -17,14 +20,45 @@ import {
     CartButton,
     Footer
 } from './styles';
+import { Load } from '../../components/Load';
+
 
 
 export function Home() {
     const navigation = useNavigation();
-    const { removeCart } = useCart();
+    const [products, setProducts] = useState<ProductDTO[]>([]);
+    const [loading, setIsLoading] = useState(true);
+
     useEffect(() => {
-        removeCart(0)
+        async function fetchProducts() {
+            try {
+                const response = await server.get('/products');
+                setProducts(response.data);
+            } catch(err) {
+                console.log(err);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        fetchProducts();
     }, []);
+    
+    const productsFormatted = products.map(products => {
+        
+        const price = products.price.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        });
+
+        const plataform = products.plataform.map(item => item.name).join('/');
+
+        return {
+            ...products,
+            plataform,
+            price
+        }
+    });
+    
     return(
         <Container>
             <Header>
@@ -38,18 +72,21 @@ export function Home() {
                 <TitleBold>Populares</TitleBold>
             </Title>
 
-            <FlatList 
-                showsVerticalScrollIndicator={false}
-                numColumns={2}
-                contentContainerStyle={{
-                    flexDirection: 'column', 
-                }}
-                data={games}
-                keyExtractor={item => String(item.id)}
-                renderItem={({ item }) => 
-                    <GameCard data={item} />
-                }
-            />
+            {   loading ? <Load /> :
+
+                <FlatList 
+                    showsVerticalScrollIndicator={false}
+                    numColumns={2}
+                    contentContainerStyle={{
+                        flexDirection: 'column', 
+                    }}
+                    data={productsFormatted}
+                    keyExtractor={item => String(item.id)}
+                    renderItem={({ item }) => 
+                        <GameCard data={item} />
+                    }
+                />
+            }
             <Footer />
         </Container>
     )

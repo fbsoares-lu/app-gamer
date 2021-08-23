@@ -29,6 +29,8 @@ export const Title = styled.Text`
 `;
 
 export const Plataform = styled.Text`
+    margin-top: 10px;
+
     font-size: ${RFValue(9)}px;
     color: ${({ theme }) => theme.colors.title};
     font-family: ${({ theme }) => theme.fonts.openSans_400};

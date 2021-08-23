@@ -1,7 +1,12 @@
 import axios from 'axios';
 
-const cep = axios.create({
+const cepApi = axios.create({
     baseURL: 'https://viacep.com.br/ws',
 });
 
-export default cep;
+const server = axios.create({
+    baseURL: 'http://192.168.1.17:3333',
+    // baseURL: 'http://localhost:3000'
+});
+
+export { cepApi, server};

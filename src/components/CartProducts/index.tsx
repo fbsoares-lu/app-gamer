@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import Plus from '../../assets/icons/plus-icon.svg';
-import Minus from '../../assets/icons/minus-icon.svg'
+import { useCart } from '../../hooks/cart';
+
+import PlusIcon from '../../assets/icons/plus-icon.svg';
+import MinusIcon from '../../assets/icons/minus-icon.svg';
+import TrashIcon from '../../assets/icons/trash.svg';
 
 import {
     Container,
     Content,
     ImageContainer,
+    BorderIconTrash,
     ImageContainerCard,
     ContentText,
     Text,
     Price,
     ButtonCounter,
-    Counter
+    Counter,
+    Button
 } from './styles';
-import { useCart } from '../../hooks/cart';
-import { View } from 'react-native';
+
 
 export interface Products {
     id: number;
-    image: Object;
+    image: string;
     name: string;
     plataform: [
         {
@@ -40,8 +44,8 @@ interface Props {
     data: Products;
 }
 
-export function CartList({ data }: Props) {
-    const { increment, decrement } = useCart();
+export function CartProducts({ data }: Props) {
+    const { increment, decrement, removeEspecificItem } = useCart();
     
     function handleIncrement(id: number) {
         increment(id);
@@ -51,11 +55,18 @@ export function CartList({ data }: Props) {
         decrement(id);
     }
 
+    function handleRemoveItem(product: Products) {
+        removeEspecificItem(product);
+    }
+
     return(
         <Container>
             <Content style={{flexDirection: 'row', alignItems: 'center'}}>
                 <ImageContainer>
-                    <ImageContainerCard source={data.image} resizeMode="cover" />
+                    <ImageContainerCard source={{ uri: `${data.image}`}} resizeMode="cover" />
+                    <BorderIconTrash onPress={() => {handleRemoveItem(data)}}>
+                        <TrashIcon style={{position: 'absolute', bottom: 10, left: 10}} height='20' />
+                    </BorderIconTrash>
                 </ImageContainer>
 
                 <ContentText>
@@ -65,11 +76,13 @@ export function CartList({ data }: Props) {
             </Content>
 
             <ButtonCounter>
-                <View>
-                <Plus onPress={() => handleIncrement(data.id)} height={8} width={8} />
-                </View>
+                <Button onPress={() => handleIncrement(data.id)} >
+                    <PlusIcon height={8} width={8} />
+                </Button>
                 <Counter>{data.quantity}</Counter>
-                <Minus onPress={() => handleDecrement(data.id)} height={8} width={8} />
+                <Button onPress={() => handleDecrement(data.id)} >
+                    <MinusIcon height={8} width={8} />
+                </Button>
             </ButtonCounter>
         </Container>
     )

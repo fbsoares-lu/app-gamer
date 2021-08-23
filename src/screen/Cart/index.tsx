@@ -1,17 +1,18 @@
-import React, { useState, useCallback } from 'react';
-import { Alert, FlatList, KeyboardAvoidingView, Platform, Modal, Text } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
 
-import { CartList } from '../../components/CartList';
-import cepApi from '../../services/cep';
+import { CartProducts } from '../../components/CartProducts';
+import { cepApi } from '../../services/cep';
 import { useCart } from '../../hooks/cart';
 
 import Arrow from '../../assets/icons/arrow.svg';
 import FindIcon from '../../assets/icons/marker.svg';
 import CartCheckIcon from '../../assets/icons/cart-check1.svg';
+
+import { PaymentSelect } from '../../components/PaymentSelect';
+import { currencyToNumber } from '../../utils/currencyToNumber';
+import { formatNumberToCurrency } from '../../utils/formatNumberToCurrency';
 
 import {
     Container,
@@ -44,16 +45,12 @@ import {
     TotalShipping,
     TotalShippingText
 } from './styles';
-import { PaymentSelect } from '../../components/PaymentSelect';
+
 interface ICepProps {
     uf: string;
     logradouro: string;
     bairro: string;
 }
-
-const schema = yup.object().shape({
-    cep: yup.number().integer().positive().required()
-});
 
 export function Cart() {
     const navigate = useNavigation();
@@ -61,54 +58,68 @@ export function Cart() {
 
     const [cep, setCep] = useState('');
     const [cepValue, setCepValue] = useState<ICepProps>({} as ICepProps);
-    const [isCep, setIsCep] = useState(false);
+    const [shippingTax, isShippingTax] = useState('');
 
     const [isVisible, setIsVisible] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(true);
 
-    // const { control, handleSubmit, formState: { errors } } = useForm({
-    //     resolver: yupResolver(schema)
-    // });
+    function handlePayment() {
+        setIsVisible(true);
+    }
 
-    // function onSubmit(data: ICepProps) {
-    //     setCep(data);
-    // }
+    async function onSubmit() {
+        const existsProductsOnCart = products.length;
 
-    const cepContent = useCallback(async() => {
-        try{
-            const response = await cepApi.get(`/${cep}/json`);
-            console.log(response.data);
-            setCepValue(response.data);
-            setIsCep(true);
-            return;
-        } catch(err) {
-            console.log(err);
-            setCep('');
+        if (existsProductsOnCart === 0) {
+            Alert.alert('Escolha um produto para continuar!');
             return;
         }
-    }, []);
 
-    // const onSubmit = useCallback(async data => {
-    //     try {
-    //         const response = await cep.get(`/${data}/json`);
-    //         console.log(response);
-    //         return;
-    //     } catch(error) {
-    //         Alert.alert("Informe um CEP válido")
-    //         return;
-    //     }
-    // }, []);
+        if (cep.length != 8) {
+            Alert.alert('CEP inválido!');
+            return;
+        }
+
+        try {
+            const response = await cepApi.get(`/${cep}/json`);
+            
+            const error = response.data.erro;
+            
+            if (error) {
+                Alert.alert('Não foi possível achar o CEP!');
+                return;
+            }
+
+            setIsDisabled(false);
+            setCepValue(response.data);
+            isShippingTax(response.data.uf);
+        } catch(err) {
+            Alert.alert('Digitação inválida!');
+            return;
+        }
+    }
 
     const totalItens = products.reduce((accumulator, current) => {
         return accumulator += current.quantity;
     }, 0);
 
     const totalProducts = products.reduce((accumulator, current) => {
-        return accumulator += (current.quantity * current.price);
-    }, 0);
+        const price = currencyToNumber(String(current.price), ',');
 
-    function handlePayment() {
-        setIsVisible(true);
-    }
+        // if (current.quantity % 3 === 0) {
+        //     console.log("3");
+        //     return accumulator += (price * current.quantity)*0.75;
+        // } 
+
+        if (shippingTax) {
+            if (shippingTax === 'PE') {
+                return accumulator += (price * current.quantity)+100;
+            } 
+            return accumulator += (price * current.quantity)+200;
+        }
+
+        return accumulator += (price * current.quantity);
+    }, 0);
 
     return (
         <KeyboardAvoidingView
@@ -128,7 +139,7 @@ export function Cart() {
                     data={products}
                     keyExtractor={item => String(item.id)}
                     renderItem={({ item }) => 
-                        <CartList data={item} />
+                        <CartProducts data={item} />
                     }
                 />
                 <Footer>
@@ -166,49 +177,53 @@ export function Cart() {
                                         />
                                     
                                     <ShippingButton 
-                                        onPress={cepContent}
+                                        onPress={() => {onSubmit()}}
                                     >
                                         <FindIcon height="20"/>
                                     </ShippingButton>
                                 </ShippingContainer>
-                                {/* {   isCep 
+                                {   !isDisabled 
                                     &&
                                     <ShippingContent>
                                         <ShippingContentStreet>
-                                            Rua Comendador Sá Barreto, Piedade - Jab
+                                            {`${cepValue.logradouro}, ${cepValue.bairro}`}
                                         </ShippingContentStreet>
                                         <ShippingPrice>
                                             valor do frete:
                                             <ShippingPriceValue>
-                                                RS 100,00
+                                                {cepValue.uf === 'PE' ? 'R$ 100,00' : 'R$ 200,00'}
                                             </ShippingPriceValue>
                                         </ShippingPrice>
                                     </ShippingContent>
-                                } */}
+                                }
                                 <TotalContainer>
-                                    {/* <Total>
-                                        <TotalShipping>frete</TotalShipping>
-                                        <TotalShippingText>{`R$ 100`}</TotalShippingText>
-                                    </Total> */}
+                                    {!isDisabled && 
+                                        <Total>
+                                            <TotalShipping>frete</TotalShipping>
+                                            <TotalShippingText>{cepValue.uf === 'PE' ? 'R$ 100,00' : 'R$ 200,00'}</TotalShippingText>
+                                        </Total>
+                                    }
 
                                     <Total>
                                         <TotalItensText>{`${totalItens} itens`}</TotalItensText>
-                                        <TotalValueText>{`R$ ${totalProducts}`}</TotalValueText>
+                                        <TotalValueText>{`${formatNumberToCurrency(totalProducts)}`}</TotalValueText>
                                     </Total>
                                 </TotalContainer>
                             </Shipping>
                         </Preview>
                         <Payment>
                             <PaymentContainer>
-                                <PaymentText>Finalizar <PaymentTextBold>Compra</PaymentTextBold></PaymentText>
-                                <PaymentButton onPress={handlePayment}>
+                                <PaymentText isDisabled={!!isDisabled}>Finalizar <PaymentTextBold isDisabled={!!isDisabled}>Compra</PaymentTextBold></PaymentText>
+                                <PaymentButton disabled={isDisabled} onPress={handlePayment}>
                                     <CartCheckIcon height="24" width="24"/>
                                 </PaymentButton>
                             </PaymentContainer>
                         </Payment>
                     </BackgroundPayment>
                 </Footer>
-                {/* <PaymentSelect isVisible={isVisible} total={totalProducts} />  */}
+                <View style={{backgroundColor: 'rgba(52, 52, 52, 0.6)', zIndex: 1}}>
+                    <PaymentSelect isVisible={isVisible} total={totalProducts} /> 
+                </View>
             </Container>
         </KeyboardAvoidingView>
     )

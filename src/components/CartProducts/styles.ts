@@ -1,3 +1,4 @@
+import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
@@ -27,6 +28,11 @@ export const ImageContainerCard = styled.Image`
     border-radius: 6px;
 `;
 
+export const BorderIconTrash = styled(TouchableOpacity)`
+    background-color: red;
+    padding: 10px;
+`;
+
 export const ContentText = styled.View`
     margin-left: 10px;
     width: 50%;
@@ -46,7 +52,6 @@ export const Price = styled.Text`
 `;
 
 export const ButtonCounter = styled.View`
-    height: 60px;
     width: 36px;
     border-radius: 6px;
     padding: 6px;
@@ -54,6 +59,11 @@ export const ButtonCounter = styled.View`
     align-items: center;
     justify-content: space-between;
 `;
+
+export const Button = styled(TouchableOpacity)`
+    padding: 4px;
+`;
+
 
 export const Counter = styled.Text`
     font-family: ${({ theme }) => theme.fonts.openSans_700};
