@@ -5,8 +5,8 @@ const cepApi = axios.create({
 });
 
 const server = axios.create({
+    // Endereço da máquina + porta 3333
     baseURL: 'http://192.168.1.17:3333',
-    // baseURL: 'http://localhost:3000'
 });
 
 export { cepApi, server};

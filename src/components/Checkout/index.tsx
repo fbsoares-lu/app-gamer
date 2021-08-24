@@ -2,6 +2,9 @@ import React, { useCallback } from "react";
 import { Modal } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+import { useCart } from "../../hooks/cart";
+import { formatNumberToCurrency } from "../../utils/formatNumberToCurrency";
+
 import {
     Container,
     ModalContainer,
@@ -14,8 +17,7 @@ import {
     PaymentButton,
     PaymentButtonText
 } from './styles';
-import { useCart } from "../../hooks/cart";
-import { formatNumberToCurrency } from "../../utils/formatNumberToCurrency";
+
 
 interface Props {
     isVisible: boolean;
@@ -23,7 +25,7 @@ interface Props {
     cepUf?: string;
 }
 
-export function PaymentSelect({ isVisible, total }: Props) {
+export function Checkout({ isVisible, total }: Props) {
     const navigation = useNavigation();
     const { removeCart } = useCart();
 

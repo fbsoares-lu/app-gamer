@@ -70,7 +70,6 @@ export const Button = styled(TouchableOpacity)`
     padding: 4px;
 `;
 
-
 export const Counter = styled.Text`
     font-family: ${({ theme }) => theme.fonts.openSans_700};
     font-size: ${RFValue(14)}px;

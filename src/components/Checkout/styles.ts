@@ -11,9 +11,10 @@ export const Container = styled.View`
 
 export const ModalContainer = styled.View`
     width: 315px;
+    padding: 20px;
+
     background-color: ${({ theme }) => theme.colors.background};
     border-radius: 10px;
-    padding: 20px;
 `;
 
 export const ModalText = styled.Text`

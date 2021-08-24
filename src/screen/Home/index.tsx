@@ -6,11 +6,10 @@ import 'intl/locale-data/jsonp/pt-BR';
 
 import CartClick from '../../assets/icons/cart-click.svg';
 import Logo from '../../assets/logo.svg';
-
-import { GameCard } from '../../components/GameCard';
-//import { product } from '../../utils/data';
+import { ProductCard } from '../../components/ProductCard';
 import { server } from '../../services/cep';
 import { ProductDTO } from '../../dtos/ProductDTO';
+import { Load } from '../../components/Load';
 
 import {
     Container,
@@ -20,8 +19,6 @@ import {
     CartButton,
     Footer
 } from './styles';
-import { Load } from '../../components/Load';
-
 
 
 export function Home() {
@@ -83,7 +80,7 @@ export function Home() {
                     data={productsFormatted}
                     keyExtractor={item => String(item.id)}
                     renderItem={({ item }) => 
-                        <GameCard data={item} />
+                        <ProductCard data={item} />
                     }
                 />
             }

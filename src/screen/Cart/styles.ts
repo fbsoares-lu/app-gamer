@@ -1,9 +1,7 @@
 import { TouchableOpacity } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { getStatusBarHeight} from 'react-native-iphone-x-helper';
-import { FlatList } from 'react-native';
 import styled from 'styled-components/native';
-
 interface Props {
     isErrored?: boolean;
     isDisabled?: boolean;
@@ -88,7 +86,7 @@ export const ShippingInput = styled.TextInput<Props>`
 
     border-width: 1px;
     border-style: solid;
-    border-color: ${({ theme, isErrored }) => isErrored ? theme.colors.error : theme.colors.primary};
+    border-color: ${({ theme, isErrored }) => isErrored ? theme.colors.trash : theme.colors.primary};
     border-radius: 50px;
 
     background-color: ${({ theme }) => theme.colors.background};
@@ -97,7 +95,7 @@ export const ShippingInput = styled.TextInput<Props>`
 export const ShippingButton = styled(TouchableOpacity)<Props>`
     height: 44px;
     width: 44px;
-    background-color: ${({ theme, isErrored }) => isErrored ? theme.colors.error : theme.colors.primary};
+    background-color: ${({ theme, isErrored }) => isErrored ? theme.colors.trash : theme.colors.primary};
     border-radius: 22px;
 
     align-items: center;

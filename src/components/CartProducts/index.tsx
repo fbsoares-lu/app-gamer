@@ -19,10 +19,8 @@ import {
     Counter,
     Button
 } from './styles';
-import { View } from 'react-native';
 
-
-export interface Products {
+export interface IProducts {
     id: number;
     image: string;
     name: string;
@@ -42,7 +40,7 @@ export interface Products {
     quantity: number;
 }
 interface Props {
-    data: Products;
+    data: IProducts;
 }
 
 export function CartProducts({ data }: Props) {
@@ -56,7 +54,7 @@ export function CartProducts({ data }: Props) {
         decrement(id);
     }
 
-    function handleRemoveItem(product: Products) {
+    function handleRemoveItem(product: IProducts) {
         removeEspecificItem(product);
     }
 
@@ -65,11 +63,9 @@ export function CartProducts({ data }: Props) {
             <Content style={{flexDirection: 'row', alignItems: 'center'}}>
                 <ImageContainer>
                     <ImageContainerCard source={{ uri: `${data.image}`}} resizeMode="cover" />
-                    <View>
-                        <BorderIconTrash onPress={() => {handleRemoveItem(data)}}>
-                            <TrashIcon height='16' />
-                        </BorderIconTrash>
-                    </View>
+                    <BorderIconTrash onPress={() => {handleRemoveItem(data)}}>
+                        <TrashIcon height='16' />
+                    </BorderIconTrash>
                 </ImageContainer>
 
                 <ContentText>
@@ -86,8 +82,7 @@ export function CartProducts({ data }: Props) {
                 <Button onPress={() => handleDecrement(data.id)} >
                     <MinusIcon height={8} width={8} />
                 </Button>
-                
             </ButtonCounter>
         </Container>
     )
-}
+};

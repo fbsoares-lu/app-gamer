@@ -40,7 +40,7 @@ interface Props {
     data: Products;
 }
 
-export function GameCard({ data }: Props) {
+export function ProductCard({ data }: Props) {
     const { addCart } = useCart();
 
     function handleAddCart(item: Products) {
@@ -79,4 +79,4 @@ export function GameCard({ data }: Props) {
             </ButtonCard>
         </Container>
     )
-}
+};

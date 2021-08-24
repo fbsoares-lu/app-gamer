@@ -10,7 +10,7 @@ import Arrow from '../../assets/icons/arrow.svg';
 import FindIcon from '../../assets/icons/marker.svg';
 import CartCheckIcon from '../../assets/icons/cart-check1.svg';
 
-import { PaymentSelect } from '../../components/PaymentSelect';
+import { Checkout } from '../../components/Checkout';
 import { currencyToNumber } from '../../utils/currencyToNumber';
 import { formatNumberToCurrency } from '../../utils/formatNumberToCurrency';
 
@@ -155,7 +155,6 @@ export function Cart() {
                                         value={cep}
                                         onChangeText={setCep}
                                         placeholder="Seu CEP"
-                                        keyboardType="numeric"
                                     />
                                     <ShippingButton onPress={() => {onSubmit()}}>
                                         <FindIcon height="20"/>
@@ -201,9 +200,9 @@ export function Cart() {
                     </BackgroundPayment>
                 </Footer>
                 <View style={{backgroundColor: 'rgba(52, 52, 52, 0.6)', zIndex: 1}}>
-                    <PaymentSelect isVisible={isVisible} total={totalProducts} /> 
+                    <Checkout isVisible={isVisible} total={totalProducts} /> 
                 </View>
             </Container>
         </KeyboardAvoidingView>
     )
-}
+};
