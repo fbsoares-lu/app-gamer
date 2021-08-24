@@ -15,6 +15,11 @@ The AppGamer application created by [WEEDO it](http://weedo.it/), aims to simula
   </a>
 </p>
 
+#
+<br>
+  <img src="./src/assets/appgamer.gif"/>
+</br>
+
 ## Tools
 The following tools were used in the project:
 
